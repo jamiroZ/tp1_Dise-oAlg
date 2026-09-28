@@ -70,10 +70,9 @@ public class Grafo {
     }
 
     // INICIALIZAR BFS
-    private void inicializarBFS() {
+    private void inicializar() {
 
         for (int i = 0; i < n; i++) {
-
             color[i] = Color.BLANCO;
             padre[i] = -1;
             nivel[i] = -1;
@@ -83,8 +82,7 @@ public class Grafo {
     // BFS
     public void BFS(int raiz) {
 
-        inicializarBFS();
-
+        inicializar();
         Queue<Integer> cola = new LinkedList<>();
 
         // La raíz se descubre
@@ -92,29 +90,27 @@ public class Grafo {
         nivel[raiz] = 0;
         padre[raiz] = -1;
 
-        cola.add(raiz);
+        cola.add(raiz);//colocamos la raiz en la cola
         System.out.println("\n===== BFS =====");
 
-        while (!cola.isEmpty()) {
+        while (!cola.isEmpty()) {//MIENTRAS queden nodos pendientes seguir (hasta [])
 
-            int u = cola.remove();
+            int u = cola.remove();//obtiene el siguiente nodo del nivel(primer nodo de la cola)
             System.out.println("\nProcesando nodo: " + u);
+            
+            for (int v = 0; v < n; v++) {// Revisamos todos los posibles adyacentes al nodo de la cola
 
-            // Revisamos todos los posibles adyacentes
-            for (int v = 0; v < n; v++) {
-
-                if (matriz[u][v] == 1) {
+                if (matriz[u][v] == 1) {//revisa la matriz de adyacencia
 
                     System.out.println(  "  Revisando arista " + u + " -> " + v);
+                    
+                    if (color[v] == Color.BLANCO) {// Si v todavía no fue descubierto
 
-                    // Si v todavía no fue descubierto
-                    if (color[v] == Color.BLANCO) {
+                        color[v] = Color.GRIS;//colocamos en nodo descubierto en gris
+                        padre[v] = u;//si llegamos de u --> v entonces construimos el arbol/foresta 
+                        nivel[v] = nivel[u] + 1;//si el padre estaba en un nivel anterior sumamos un nivel mas al hijo
 
-                        color[v] = Color.GRIS;
-                        padre[v] = u;
-                        nivel[v] = nivel[u] + 1;
-
-                        cola.add(v);
+                        cola.add(v);//colocamos los nodos de ese nivel en la cola.
 
                         System.out.println("    " + v + " pasa a GRIS, padre = " + u + ", nivel = " + nivel[v]  );
                     }
@@ -122,7 +118,7 @@ public class Grafo {
             }
 
             // Terminamos de revisar todos los adyacentes
-            color[u] = Color.NEGRO;
+            color[u] = Color.NEGRO;//colocamos el nodo de la cola en negro
             System.out.println(  "  " + u + " pasa a NEGRO"  );
         }
     }
@@ -134,7 +130,6 @@ public class Grafo {
         System.out.println(  "Nodo\tColor\tPadre\tNivel"  );
 
         for (int i = 0; i < n; i++) {
-
             System.out.println(  i + "\t" +  color[i] + "\t" +padre[i] + "\t" +   nivel[i] );
         }
     }
@@ -146,7 +141,7 @@ public class Grafo {
         boolean tieneAristas = false;
 
         for (int v = 0; v < n; v++) {
-            if (padre[v] != -1) {
+            if (padre[v] != -1) {//sino es el nodo 0 que apunta al nodo raiz que muestre
                 System.out.println( padre[v] + " -> " + v);
                 tieneAristas = true;
             }
@@ -215,7 +210,7 @@ public class Grafo {
     // DFS
     public void DFS(int raiz) {
 
-            inicializarBFS();
+            inicializar();//INICIA color=BLANCO ,padre[]=-1 y nivel[]=0
             tiempo = 0;
 
             for (int i = 0; i < n; i++) {
@@ -229,22 +224,22 @@ public class Grafo {
 
     private void DFSRecursivo(int u) {
 
-        color[u] = Color.GRIS;
+        color[u] = Color.GRIS;//Marca el nodo como conocido
         tiempo++;
-        tiempoEntrada[u] = tiempo;
+        tiempoEntrada[u] = tiempo;//tiempo de entrada
 
         System.out.println("Visitando " + u);
 
-        for (int v = 0; v < n; v++) {
-            if (matriz[u][v] == 1 && color[v] == Color.BLANCO) {
-                padre[v] = u;
-                DFSRecursivo(v);
+        for (int v = 0; v < n; v++) {//visitamos todos todos los adyacentes no conocidos
+            if (matriz[u][v] == 1 && color[v] == Color.BLANCO) {//existe un adyacente no visitado 
+                padre[v] = u;//guardamos el nodo padre del adyacente desconocido
+                DFSRecursivo(v);//sigue buscando los hijos de ese nodo hasta llegar a la hoja
             }
         }
 
-        color[u] = Color.NEGRO;
+        color[u] = Color.NEGRO;//visito todos los hijos del nodo 
         tiempo++;
-        tiempoSalida[u] = tiempo;
+        tiempoSalida[u] = tiempo;//tiempo de salida
 
         System.out.println("Terminando " + u);
     }

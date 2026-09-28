@@ -35,12 +35,12 @@ public class Main_Grafo {
                     grafo.mostrarMatriz();
 
                     // BFS
-                    grafo.BFS(1);
+                    grafo.BFS(3);
 
                     grafo.mostrarResultadoBFS();
 
                     grafo.mostrarForesta();
-                    
+
                     grafo.DFS(1);
                     // CONEXIDAD
 
